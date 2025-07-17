@@ -70,7 +70,7 @@ export default function IdeasPage() {
   );
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 overflow-x-hidden">
       <Navbar />
       <Banner img_src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" />
       <div className="mb-4 flex items-center justify-between gap-4 px-20 pt-16">
