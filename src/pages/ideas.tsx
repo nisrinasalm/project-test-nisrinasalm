@@ -132,7 +132,7 @@ export default function IdeasPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-20">
           {ideasData.map((idea: IdeaData) => (
-            <div key={idea.id} className="border rounded overflow-hidden">
+            <div key={idea.id} className="border rounded overflow-hidden transform transition duration-300 hover:scale-110 hover:cursor-pointer">
               <div className="relative w-full aspect-[4/3]">
                 <Image
                   src={idea.small_image?.[0]?.url}
