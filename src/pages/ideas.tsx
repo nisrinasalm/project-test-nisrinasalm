@@ -6,6 +6,7 @@ import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import clsx from "clsx";
 
 import Navbar from "@/components/Navbar";
+import { formatDate } from "@/lib/date";
 import { buildPaginationControl } from "@/lib/pagination";
 import { PaginatedApiResponse } from "@/types/api";
 import { IdeaData } from "@/types/ideas";
@@ -119,9 +120,12 @@ export default function IdeasPage() {
                 />
               </div>
               <div className="p-4">
-                <h2 className="text-lg font-semibold line-clamp-3">
+                <div className="text-gray-500 font-normal">
+                  {formatDate(idea.published_at)}
+                </div>
+                <div className="text-lg font-semibold line-clamp-3">
                   {idea.title}
-                </h2>
+                </div>
               </div>
             </div>
           ))}

@@ -15,4 +15,5 @@ export type IdeaData = {
     file_name: string;
     url: string;
   }[];
+  published_at: Date;
 };
