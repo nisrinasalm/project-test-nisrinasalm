@@ -9,6 +9,7 @@ import Navbar from "@/components/Navbar";
 import { buildPaginationControl } from "@/lib/pagination";
 import { PaginatedApiResponse } from "@/types/api";
 import { IdeaData } from "@/types/ideas";
+import Banner from "@/components/Banner";
 
 export default function IdeasPage() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function IdeasPage() {
     sort: string
   ): Promise<PaginatedApiResponse<IdeaData[]>> => {
     const res = await fetch(
-      `/api/ideas?page[number]=${page}&page[size]=${size}&sort=${sort}&append[]=small_image&append[]=medium_image`,
+      `https://suitmedia-backend.suitdev.com/api/ideas?page[number]=${page}&page[size]=${size}&sort=${sort}&append[]=small_image&append[]=medium_image`,
       {
         headers: {
           Accept: "application/json",
@@ -61,11 +62,10 @@ export default function IdeasPage() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto py-8">
       <Navbar />
-      <h1 className="text-3xl font-semibold mb-6">Ideas</h1>
-
-      <div className="mb-4 flex items-center justify-between gap-4">
+      <Banner img_src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" />
+      <div className="mb-4 flex items-center justify-between gap-4 px-20 pt-16">
         <div>
           <div className="text-sm">
             Showing {ideas?.meta?.from} - {ideas?.meta?.to} of{" "}
@@ -105,14 +105,15 @@ export default function IdeasPage() {
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-20">
           {ideasData.map((idea: IdeaData) => (
             <div key={idea.id} className="border rounded overflow-hidden">
               <div className="relative w-full aspect-[4/3]">
                 <Image
-                  src={idea.small_image?.url}
+                  src={idea.small_image?.[0]?.url}
                   alt={idea.title ?? "Idea Image"}
                   fill
+                  unoptimized
                   className="object-cover"
                   loading="lazy"
                 />
