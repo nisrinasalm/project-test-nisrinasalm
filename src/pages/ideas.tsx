@@ -61,8 +61,8 @@ export default function IdeasPage() {
 
   const ideasData = ideas?.data || [];
   const paginationControl = buildPaginationControl(
-    ideas?.meta?.current_page,
-    ideas?.meta?.last_page,
+    ideas?.meta?.current_page || 1,
+    ideas?.meta?.last_page || 1,
     1
   );
 
