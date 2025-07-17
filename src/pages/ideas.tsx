@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import clsx from "clsx";
 
@@ -14,22 +14,26 @@ import Banner from "@/components/Banner";
 
 export default function IdeasPage() {
   const router = useRouter();
-  const { query } = router;
+   const searchParams = useSearchParams();
 
-  const [page, setPage] = useState(Number(query.page) || 1);
-  const [size, setSize] = useState(Number(query.size) || 10);
-  const [sort, setSort] = useState((query.sort as string) || "-published_at");
+   const page = Number(searchParams.get("page")) || 1;
+  const size = Number(searchParams.get("size")) || 10;
+  const sort = searchParams.get("sort") || "-published_at";
 
-  useEffect(() => {
-    router.replace(
-      {
-        pathname: "/ideas",
-        query: { page, size, sort },
-      },
+
+  const handleChange = (newParams: { page?: number; size?: number; sort?: string }) => {
+    const newPage = newParams.page ?? page;
+    const newSize = newParams.size ?? size;
+    const newSort = newParams.sort ?? sort;
+
+    router.push(
+      `/ideas?page=${newPage}&size=${newSize}&sort=${newSort}`,
       undefined,
       { shallow: true }
     );
-  }, [page, size, sort, router]);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const fetchIdeas = async (
     page: number,
@@ -80,7 +84,7 @@ export default function IdeasPage() {
           <select
             id="size"
             value={size}
-            onChange={(e) => setSize(Number(e.target.value))}
+            onChange={(e) => handleChange({ size: Number(e.target.value), page: 1 })}
             className="border rounded px-2 py-1 text-sm"
           >
             <option value={10}>10</option>
@@ -94,7 +98,7 @@ export default function IdeasPage() {
           <select
             id="sort"
             value={sort}
-            onChange={(e) => setSort(e.target.value)}
+            onChange={(e) => handleChange({ sort: e.target.value, page: 1 })}
             className="border rounded px-2 py-1 text-sm"
           >
             <option value="-published_at">Newest</option>
@@ -134,7 +138,7 @@ export default function IdeasPage() {
 
       <div className="mt-6 flex justify-center gap-4">
         <button
-          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+          onClick={() => handleChange({ page: page - 1 })}
           disabled={page === 1}
           className={clsx(
             "flex min-w-[38px] justify-center items-center rounded-lg drop-shadow-sm border !p-2 !font-semibold hover:bg-slate-100",
@@ -147,18 +151,18 @@ export default function IdeasPage() {
           <button
             key={index}
             className={clsx(
-              "flex min-w-[38px] justify-center rounded-lg text-black drop-shadow-sm border border-typo-outline !p-2 !font-semibold hover:bg-slate-100",
+              "flex min-w-[38px] justify-center rounded-lg text-black drop-shadow-sm border !p-2 !font-semibold hover:bg-slate-100",
               pageItem === page &&
-                "text-white bg-[#ff6600] hover:bg-typo-primary"
+                "text-white bg-[#ff6600] hover:text-black"
             )}
-            onClick={() => typeof page === "number" && setPage(pageItem)}
+            onClick={() => typeof pageItem === "number" && handleChange({ page: pageItem })}
             disabled={pageItem === "..." || isLoading}
           >
             {pageItem}
           </button>
         ))}
         <button
-          onClick={() => setPage((p) => p + 1)}
+           onClick={() => handleChange({ page: page + 1 })}
           className={clsx(
             "flex min-w-[38px] justify-center items-center rounded-lg drop-shadow-sm border !p-2 !font-semibold hover:bg-slate-100",
             "bg-white text-black"
