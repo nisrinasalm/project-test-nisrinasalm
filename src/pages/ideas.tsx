@@ -14,14 +14,17 @@ import Banner from "@/components/Banner";
 
 export default function IdeasPage() {
   const router = useRouter();
-   const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
-   const page = Number(searchParams.get("page")) || 1;
+  const page = Number(searchParams.get("page")) || 1;
   const size = Number(searchParams.get("size")) || 10;
   const sort = searchParams.get("sort") || "-published_at";
 
-
-  const handleChange = (newParams: { page?: number; size?: number; sort?: string }) => {
+  const handleChange = (newParams: {
+    page?: number;
+    size?: number;
+    sort?: string;
+  }) => {
     const newPage = newParams.page ?? page;
     const newSize = newParams.size ?? size;
     const newSort = newParams.sort ?? sort;
@@ -84,7 +87,9 @@ export default function IdeasPage() {
           <select
             id="size"
             value={size}
-            onChange={(e) => handleChange({ size: Number(e.target.value), page: 1 })}
+            onChange={(e) =>
+              handleChange({ size: Number(e.target.value), page: 1 })
+            }
             className="border rounded px-2 py-1 text-sm"
           >
             <option value={10}>10</option>
@@ -108,7 +113,22 @@ export default function IdeasPage() {
       </div>
 
       {isLoading ? (
-        <p>Loading...</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-20">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={index}
+              className="border rounded overflow-hidden animate-pulse"
+            >
+              <div className="relative w-full aspect-[4/3] bg-gray-200" />
+              <div className="p-4 space-y-2">
+                <div className="h-4 w-1/3 bg-gray-300 rounded" />
+                <div className="h-5 w-full bg-gray-300 rounded" />
+                <div className="h-5 w-5/6 bg-gray-300 rounded" />
+                <div className="h-5 w-2/3 bg-gray-300 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-20">
           {ideasData.map((idea: IdeaData) => (
@@ -152,17 +172,18 @@ export default function IdeasPage() {
             key={index}
             className={clsx(
               "flex min-w-[38px] justify-center rounded-lg text-black drop-shadow-sm border !p-2 !font-semibold hover:bg-slate-100",
-              pageItem === page &&
-                "text-white bg-[#ff6600] hover:text-black"
+              pageItem === page && "text-white bg-[#ff6600] hover:text-black"
             )}
-            onClick={() => typeof pageItem === "number" && handleChange({ page: pageItem })}
+            onClick={() =>
+              typeof pageItem === "number" && handleChange({ page: pageItem })
+            }
             disabled={pageItem === "..." || isLoading}
           >
             {pageItem}
           </button>
         ))}
         <button
-           onClick={() => handleChange({ page: page + 1 })}
+          onClick={() => handleChange({ page: page + 1 })}
           className={clsx(
             "flex min-w-[38px] justify-center items-center rounded-lg drop-shadow-sm border !p-2 !font-semibold hover:bg-slate-100",
             "bg-white text-black"
